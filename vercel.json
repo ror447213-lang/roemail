@@ -1,0 +1,22 @@
+{
+  "builds": [
+    {
+      "src": "api/app.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/bind_info",
+      "dest": "api/app.py"
+    },
+    {
+      "src": "/health",
+      "dest": "api/app.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/public/index.html"
+    }
+  ]
+}
