@@ -1,0 +1,653 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rohit Bind Info</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+            color: #fff;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        h1 {
+            color: white;
+            font-size: 2.8rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .tagline {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            margin-top: 5px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            color: #4a5568;
+            font-size: 1.5rem;
+        }
+        
+        .card-title i {
+            color: #667eea;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-weight: 500;
+        }
+        
+        .token-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .token-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .result-card {
+            display: none;
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .status-success {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .status-error {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .info-item {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .info-label {
+            font-size: 0.85rem;
+            color: #718096;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d3748;
+            word-break: break-all;
+        }
+        
+        .countdown-display {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(45deg, #feb692, #ea5455);
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        .countdown-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+        
+        .countdown-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .api-info {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .api-endpoints {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .api-endpoint {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .endpoint-method {
+            display: inline-block;
+            padding: 5px 10px;
+            background: #667eea;
+            color: white;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .loader {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: #38a169;
+        }
+        
+        .notification.error {
+            background: #e53e3e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h1>Rohit Bind Info</h1>
+            </div>
+            <p class="tagline">Secure Garena account binding information checker with real-time monitoring</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-key"></i>
+                    <h2>Check Bind Information</h2>
+                </div>
+                
+                <div class="input-group">
+                    <label for="accessToken">
+                        <i class="fas fa-ticket-alt"></i> Garena Access Token
+                    </label>
+                    <input type="text" id="accessToken" class="token-input" 
+                           placeholder="Enter your Garena access token here...">
+                    <small style="color: #718096; display: block; margin-top: 8px;">
+                        Your token is processed securely and not stored anywhere.
+                    </small>
+                </div>
+                
+                <button class="btn" onclick="checkBindInfo()">
+                    <i class="fas fa-search"></i>
+                    Check Bind Status
+                </button>
+                
+                <div class="loader" id="loader">
+                    <div class="spinner"></div>
+                    <p>Fetching bind information...</p>
+                </div>
+            </div>
+            
+            <div class="card result-card" id="resultCard">
+                <div class="card-title">
+                    <i class="fas fa-chart-bar"></i>
+                    <h2>Bind Information Result</h2>
+                </div>
+                
+                <div id="statusIndicator"></div>
+                
+                <div id="resultContent"></div>
+                
+                <div id="chartContainer" style="display: none; margin-top: 20px;">
+                    <canvas id="countdownChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="api-info card">
+            <div class="card-title">
+                <i class="fas fa-code"></i>
+                <h2>API Documentation</h2>
+            </div>
+            
+            <p>This service provides RESTful API endpoints for programmatic access.</p>
+            
+            <div class="api-endpoints">
+                <div class="api-endpoint">
+                    <span class="endpoint-method">GET</span>
+                    <strong>/bind_info</strong>
+                    <p style="margin-top: 10px; color: #718096;">
+                        Get bind information for a Garena account
+                    </p>
+                    <p><strong>Parameter:</strong> access_token</p>
+                    <code style="display: block; margin-top: 10px; background: #f8f9fa; padding: 8px; border-radius: 6px;">
+                        /bind_info?access_token=YOUR_TOKEN
+                    </code>
+                </div>
+                
+                <div class="api-endpoint">
+                    <span class="endpoint-method">GET</span>
+                    <strong>/health</strong>
+                    <p style="margin-top: 10px; color: #718096;">
+                        Health check endpoint
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Rohit Bind Info v2.0 • Secure Garena Account Monitoring</p>
+            <p style="margin-top: 5px;">© 2024 Rohit Services • All data is processed in real-time</p>
+        </footer>
+    </div>
+    
+    <div class="notification" id="notification"></div>
+    
+    <script>
+        let countdownChart = null;
+        
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        function formatTime(seconds) {
+            const days = Math.floor(seconds / 86400);
+            const hours = Math.floor((seconds % 86400) / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            
+            let parts = [];
+            if (days > 0) parts.push(`${days}d`);
+            if (hours > 0) parts.push(`${hours}h`);
+            if (minutes > 0) parts.push(`${minutes}m`);
+            if (secs > 0 || parts.length === 0) parts.push(`${secs}s`);
+            
+            return parts.join(' ');
+        }
+        
+        function updateCountdownChart(seconds) {
+            const ctx = document.getElementById('countdownChart').getContext('2d');
+            
+            if (countdownChart) {
+                countdownChart.destroy();
+            }
+            
+            const days = Math.floor(seconds / 86400);
+            const hours = Math.floor((seconds % 86400) / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            
+            countdownChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Days', 'Hours', 'Minutes', 'Seconds'],
+                    datasets: [{
+                        data: [days, hours, minutes, secs],
+                        backgroundColor: [
+                            '#FF6B6B',
+                            '#4ECDC4',
+                            '#FFD166',
+                            '#06D6A0'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    return `${label}: ${value}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        async function checkBindInfo() {
+            const accessToken = document.getElementById('accessToken').value.trim();
+            const loader = document.getElementById('loader');
+            const resultCard = document.getElementById('resultCard');
+            const resultContent = document.getElementById('resultContent');
+            const statusIndicator = document.getElementById('statusIndicator');
+            const chartContainer = document.getElementById('chartContainer');
+            
+            if (!accessToken) {
+                showNotification('Please enter a valid access token', 'error');
+                return;
+            }
+            
+            // Show loader
+            loader.style.display = 'block';
+            resultCard.style.display = 'none';
+            
+            try {
+                const response = await fetch(`/bind_info?access_token=${encodeURIComponent(accessToken)}`);
+                const data = await response.json();
+                
+                // Hide loader
+                loader.style.display = 'none';
+                
+                if (data.status === 'success') {
+                    // Show result card
+                    resultCard.style.display = 'block';
+                    
+                    // Status indicator
+                    statusIndicator.innerHTML = `
+                        <div class="status-indicator status-success">
+                            <i class="fas fa-check-circle"></i>
+                            Successfully retrieved bind information
+                        </div>
+                    `;
+                    
+                    // Result content
+                    const resultData = data.data;
+                    resultContent.innerHTML = `
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Current Email</div>
+                                <div class="info-value">${resultData.current_email || 'Not set'}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Pending Email</div>
+                                <div class="info-value">${resultData.pending_email || 'None'}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Status</div>
+                                <div class="info-value">${resultData.pending_email ? 'Pending Confirmation' : 'Confirmed'}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Summary</div>
+                                <div class="info-value">${data.summary}</div>
+                            </div>
+                        </div>
+                        
+                        ${resultData.countdown_seconds > 0 ? `
+                            <div class="countdown-display">
+                                <div class="countdown-label">Countdown until confirmation</div>
+                                <div class="countdown-value">${formatTime(resultData.countdown_seconds)}</div>
+                                <div class="countdown-label">${resultData.countdown_human}</div>
+                            </div>
+                        ` : ''}
+                        
+                        <div style="margin-top: 20px;">
+                            <button class="btn" onclick="copyToClipboard('${accessToken}')" style="background: #4299e1;">
+                                <i class="fas fa-copy"></i>
+                                Copy Access Token
+                            </button>
+                        </div>
+                    `;
+                    
+                    // Show chart if countdown exists
+                    if (resultData.countdown_seconds > 0) {
+                        chartContainer.style.display = 'block';
+                        updateCountdownChart(resultData.countdown_seconds);
+                    } else {
+                        chartContainer.style.display = 'none';
+                    }
+                    
+                    showNotification('Bind information retrieved successfully!', 'success');
+                } else {
+                    // Error handling
+                    statusIndicator.innerHTML = `
+                        <div class="status-indicator status-error">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Error: ${data.error || 'Unknown error'}
+                        </div>
+                    `;
+                    
+                    resultContent.innerHTML = `
+                        <div class="info-item">
+                            <div class="info-label">Error Details</div>
+                            <div class="info-value">${data.error || 'Unknown error occurred'}</div>
+                        </div>
+                        
+                        ${data.response_text ? `
+                            <div class="info-item">
+                                <div class="info-label">Response</div>
+                                <div class="info-value" style="font-size: 0.9rem;">${data.response_text}</div>
+                            </div>
+                        ` : ''}
+                    `;
+                    
+                    resultCard.style.display = 'block';
+                    chartContainer.style.display = 'none';
+                    
+                    showNotification(`Error: ${data.error || 'Failed to retrieve information'}`, 'error');
+                }
+            } catch (error) {
+                loader.style.display = 'none';
+                
+                statusIndicator.innerHTML = `
+                    <div class="status-indicator status-error">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Network Error
+                    </div>
+                `;
+                
+                resultContent.innerHTML = `
+                    <div class="info-item">
+                        <div class="info-label">Error</div>
+                        <div class="info-value">Failed to connect to server. Please try again.</div>
+                    </div>
+                `;
+                
+                resultCard.style.display = 'block';
+                chartContainer.style.display = 'none';
+                
+                showNotification('Network error occurred. Please check your connection.', 'error');
+            }
+        }
+        
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showNotification('Access token copied to clipboard!', 'success');
+            }).catch(err => {
+                showNotification('Failed to copy to clipboard', 'error');
+            });
+        }
+        
+        // Allow Enter key to trigger check
+        document.getElementById('accessToken').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkBindInfo();
+            }
+        });
+        
+        // Check if there's a token in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const tokenFromUrl = urlParams.get('token');
+        if (tokenFromUrl) {
+            document.getElementById('accessToken').value = tokenFromUrl;
+            setTimeout(() => checkBindInfo(), 500);
+        }
+    </script>
+</body>
+</html>
