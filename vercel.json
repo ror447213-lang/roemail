@@ -7,16 +7,8 @@
   ],
   "routes": [
     {
-      "src": "/bind_info",
-      "dest": "api/app.py"
-    },
-    {
-      "src": "/health",
-      "dest": "api/app.py"
-    },
-    {
       "src": "/(.*)",
-      "dest": "/public/index.html"
+      "dest": "api/app.py"
     }
   ]
 }
